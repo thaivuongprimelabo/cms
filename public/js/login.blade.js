@@ -5,9 +5,10 @@ $(document).ready(function() {
     });
 	$('#frmForm').validate({
 		rules: {
-			username: {
+			email: {
 				required:true,
-				maxlength: 255
+				maxlength: 255,
+				email:true
 			},
 			password: {
 				required:true,
@@ -15,13 +16,14 @@ $(document).ready(function() {
 			}
 		},
 		messages: {
-			username: {
-				required: "Please input Username",
-				maxlength: "Maximum is 255 character"
+			email: {
+				required: "Please input Email",
+				maxlength: "Maximum is 255 character",
+				email:"Email is invalid"
             },
             password: {
             	required: "Please input Password",
-            	rangelength: "Input value must be between 6 and 40 char"
+            	rangelength: "Input value must be between 6 and 40 char",
             }
     	}
 	});

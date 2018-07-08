@@ -16,7 +16,7 @@
                         {{ session('error_login') }}
                     </div>
                 @endif
-				<form action={{ route(Request::segment(1) .  '.authenticate') }} method="post" id="frmForm">
+				<form action={{ route('auth.authenticate') }} method="post" id="frmForm">
 					{{ csrf_field() }}
 					<div class="form-group mb-lg">
 						<label>@lang('title.email_txt')</label>
@@ -33,7 +33,7 @@
 					<div class="form-group mb-lg">
 						<div class="clearfix">
 							<label class="pull-left">@lang('title.password_txt')</label>
-							<a href={{ route(Request::segment(1) .'.passwords.request.form') }} class="pull-right">@lang('title.lost_password_txt')</a>
+							<a href={{ route('auth.passwords.request.form') }} class="pull-right">@lang('title.lost_password_txt')</a>
 						</div>
 						<div class="input-group input-group-icon">
 							<input name="password" type="password" id="password" class="form-control input-lg" />

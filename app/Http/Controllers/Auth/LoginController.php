@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -21,13 +22,15 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+    
+    private $guard = 'auth';
 
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/cms';
+    protected $redirectTo = '';
 
     /**
      * Create a new controller instance.
@@ -37,6 +40,12 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        
+        if(request()->segment(1) == 'auth') {
+            abort(404);
+        } else {
+            $this->guard = request()->segment(1);
+        }
     }
     
     
@@ -49,10 +58,25 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request) {
         $credentials = $request->only('email', 'password');
-        
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->rememberme)) {
             // Authentication passed...
-            return redirect()->intended('cms.dashboard');
+            return redirect(route($this->guard . '.cms.dashboard'));
+        } else {
+            return redirect(route($this->guard . '.login'))->with('error_login', __('messages.err_login'));
         }
+    }
+    
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request) {
+        $this->guard()->logout();
+        
+        $request->session()->invalidate();
+        
+        return redirect(route($this->guard . '.login'));
     }
 }
